@@ -19,6 +19,12 @@ class Article extends Model
         'updated_at',
     ];
 
+    //invento mio ver si realmente lo hacen o no
+    /* public function obtenerArticles()
+    {
+        return Article::all();
+    } */
+
     // Relacion 1 a muchos inversa (article-user)
     public function user()
     {
@@ -35,5 +41,11 @@ class Article extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    // Actualizar slug en lugar de id
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

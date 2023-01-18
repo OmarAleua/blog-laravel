@@ -14,7 +14,10 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    {{-- {{ __('Bienvenido - Tu ya estas logeado ahora!') }} --}}
+                    <pre>
+                        {{ var_dump ('Bienvenido - Tu ya estas logeado ahora!') }}
+                    </pre>
                 </div>
             </div>
         </div>
