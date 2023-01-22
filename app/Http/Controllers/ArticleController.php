@@ -19,7 +19,7 @@ class ArticleController extends Controller
     {
         // Mostrar los articulos en el Admin
         $user = Auth::user(); //Auth traer la info del usu autenticado - all
-        $articles = Article::where('user_id', $user->id)
+        $articles = Article::where('user_id', $user->id) //user_id es la clave foranea de article con usuarios
             ->orderBy('id', 'desc')
             ->simplePaginate(10);
 
@@ -33,8 +33,8 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //Obtener cateforias publicas
-        $categories = Category::select('id', 'name')
+        //Obtener categorias publicas
+        $categories = Category::select('id', 'name') //otra forma
             ->where('status', '1')
             ->get();
 
@@ -47,9 +47,9 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ArticleRequest $request)
+    public function store(ArticleRequest $request) //ArticleRequest contiene las validaciones
     {
-        //
+        // 
         $request->merge([
             'user_id' => Auth::user()->id,
         ]);

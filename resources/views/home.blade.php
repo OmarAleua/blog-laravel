@@ -16,7 +16,7 @@
 
                     {{-- {{ __('Bienvenido - Tu ya estas logeado ahora!') }} --}}
                     <pre>
-                        {{ var_dump ('Bienvenido - Tu ya estas logeado ahora!') }}
+                        {{ var_dump ($navbar) }}
                     </pre>
                 </div>
             </div>

@@ -13,7 +13,7 @@ class ArticleRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return true; //a las autorizaciones las vamos a manejar en otro archivo y las reglas de validaciones iran aqui
     }
 
     /**
