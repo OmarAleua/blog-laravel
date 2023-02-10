@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use App\Http\Requests\ArticleRequest;
 
 class ArticleController extends Controller
@@ -23,7 +24,7 @@ class ArticleController extends Controller
             ->orderBy('id', 'desc')
             ->simplePaginate(10);
 
-        return view('admin.articles.idex', compact('articles'));
+        return view('admin.articles.index', compact('articles'));
     }
 
     /**
@@ -78,7 +79,10 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        //
+        //mostrar los comentarios para todos los usuarios y roles
+        $comments = $article->comments()->simplePaginate(5);
+
+        return view('subscriber.articles.show', compact('article', 'comments'));
     }
 
     /**
@@ -89,7 +93,12 @@ class ArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        //Editar categorias publicas - lo traje del obtener (Metodo create)
+        $categories = Category::select('id', 'name') //otra forma
+            ->where('status', '1')
+            ->get();
+
+        return view('admin.articles.edit', compact('categories', 'article'));
     }
 
     /**
@@ -99,9 +108,32 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Article $article)
+    public function update(ArticleRequest $request, Article $article)
     {
-        //
+        //si el usuario sube una nueva imagen - que elimine la anterior y que asigne la nueva imagen
+        if($request->hasFile('image')){
+            //eliminar la imagen anterior
+            File::delete(public_path('storage/' . $article->image));
+            //ahora que la nueva imagen se asigne
+            $article['image'] = $request->file('image')->store('articles');
+        }
+
+        //actualizar los datos
+        $article->update([
+            'title' => $request->title,
+            'slug' => $request->slug,
+            'introduction' => $request->introduction,
+            'body' => $request->body,
+            'user_id' => Auth::user()->id,
+            'category_id' => $request->category_id,
+            'status' => $request->status,
+
+        ]);
+
+        //redireccionamos a index
+        return redirect()->action([ArticleController::class, 'index'])
+            ->with('success-update', 'Articulo modificado con exito');
+
     }
 
     /**
@@ -112,6 +144,16 @@ class ArticleController extends Controller
      */
     public function destroy(Article $article)
     {
-        //
+        //Eliminar la imagen del articulo
+        if($article->image){
+            File::delete(public_path('storage/' . $article->image));
+        }
+
+        //Eliminar articulo
+        $article->delete();
+
+        //redireccionamos a index
+        return redirect()->action([ArticleController::class, 'index'], compact($article))
+            ->with('success-delete', 'Articulo eliminado con exito');
     }
 }

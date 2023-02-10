@@ -14,9 +14,9 @@
                         </div>
                     @endif
 
-                    {{-- {{ __('Bienvenido - Tu ya estas logeado ahora!') }} --}}
+                    {{ __('Bienvenido - Tu ya estas logeado ahora!') }}
                     <pre>
-                        {{ var_dump ($navbar) }}
+                        {{-- {{ var_dump ($navbar) }} --}}
                     </pre>
                 </div>
             </div>
